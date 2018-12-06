@@ -1,4 +1,4 @@
-from flask import Flask,render_template
+from flask import Flask,render_template,request,flash,redirect,url_for
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from models import Base, Category, CategoryItem
@@ -30,8 +30,16 @@ def showItems(category_name):
 def newCategoryItem(category_name):
     category=session.query(Category).filter_by(name=category_name).one()
     print category.name
-    return render_template('newcategoryitem.html')
+    if request.method == 'POST':
+        newItem=CategoryItem(name=request.form['name'],description=request.form['description'],price=request.form['price'],category_id=category.id)
+        session.add(newItem)
+        session.commit()
+        flash('New Menu %s Item Successfully Created' % (newItem.name))
+        return redirect(url_for('showItems', category_name=category.name))
+    else:
+        return render_template('newcategoryitem.html')
 
 if __name__ == '__main__':
+    app.secret_key = 'super_secret_key'
     app.debug = True
     app.run(host='0.0.0.0', port=5000,threaded=False)
