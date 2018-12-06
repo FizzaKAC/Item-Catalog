@@ -24,13 +24,13 @@ def showItems(category_name):
     category=session.query(Category).filter_by(name=category_name).one()
     items=session.query(CategoryItem).filter_by(category_id=category.id).all()
     print category.id
-    return render_template('menu.html',category=category,items=items)
+    return render_template('categoryitem.html',category=category,items=items)
 
 @app.route('/catalog/<string:category_name>/items/new',methods=['GET','POST'])
 def newCategoryItem(category_name):
     category=session.query(Category).filter_by(name=category_name).one()
     print category.name
-    return 'inside'
+    return render_template('newcategoryitem.html')
 
 if __name__ == '__main__':
     app.debug = True
