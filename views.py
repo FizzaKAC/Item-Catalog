@@ -41,11 +41,20 @@ def newCategoryItem(category_name):
 
 @app.route('/catalog/<string:category_name>/items/<int:item_id>/edit/',methods=['GET','POST'])
 def editCategoryItem(category_name,item_id):
-    item=session.query(CategoryItem).filter_by(id=item_id).one()
-    print item.name
-    print item.category_id
-    return render_template('editcategoryitem.html',item=item)
-
+    editedItem=session.query(CategoryItem).filter_by(id=item_id).one()
+    if request.method == 'POST':
+        if request.form['name']:
+            editedItem.name = request.form['name']
+        if request.form['description']:
+            editedItem.description = request.form['description']
+        if request.form['price']:
+            editedItem.price = request.form['price']
+        session.add(editedItem)
+        session.commit()
+        flash('Category Item Successfully Edited')
+        return redirect(url_for('showItems', category_name=category_name))
+    else:
+        return render_template('editcategoryitem.html',item=editedItem)
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
