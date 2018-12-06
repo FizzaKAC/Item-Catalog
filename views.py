@@ -26,7 +26,7 @@ def showItems(category_name):
     print category.id
     return render_template('categoryitem.html',category=category,items=items)
 
-@app.route('/catalog/<string:category_name>/items/new',methods=['GET','POST'])
+@app.route('/catalog/<string:category_name>/items/new/',methods=['GET','POST'])
 def newCategoryItem(category_name):
     category=session.query(Category).filter_by(name=category_name).one()
     print category.name
@@ -38,6 +38,14 @@ def newCategoryItem(category_name):
         return redirect(url_for('showItems', category_name=category.name))
     else:
         return render_template('newcategoryitem.html')
+
+@app.route('/catalog/<string:category_name>/items/<int:item_id>/edit/',methods=['GET','POST'])
+def editCategoryItem(category_name,item_id):
+    item=session.query(CategoryItem).filter_by(id=item_id).one()
+    print item.name
+    print item.category_id
+    return "Insiiide"
+
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'

@@ -50,7 +50,7 @@
 							<h3>{{i.name}}</h3>
 							<p>{{i.description}}</p>
 							<p class="menu-price">{{i.price}}</p>
-							<a href='#'>Edit</a> | 
+							<a href="{{url_for('editCategoryItem',category_name=category.name,item_id=i.id)}}">Edit</a> | 
 							<a href='#'>Delete</a>
 						</div>
 					{% endfor %}
