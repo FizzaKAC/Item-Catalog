@@ -13,10 +13,21 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 @app.route('/')
+@app.route('/catalog/')
 def index():
     categories=session.query(Category).order_by(asc(Category.name))
     return render_template('categories.html',categories=categories)
 
+@app.route('/catalog/<string:category_name>/')
+@app.route('/catalog/<string:category_name>/items/')
+def showItems(category_name):
+    category=session.query(Category).filter_by(name=category_name).one()
+    items=session.query(CategoryItem).filter_by(category_id=category.id).all()
+    print category.id
+    return "Im in!"
+
+
 if __name__ == '__main__':
     app.debug = True
     app.run(host='0.0.0.0', port=5000,threaded=False)
+    
