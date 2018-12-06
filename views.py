@@ -24,10 +24,8 @@ def showItems(category_name):
     category=session.query(Category).filter_by(name=category_name).one()
     items=session.query(CategoryItem).filter_by(category_id=category.id).all()
     print category.id
-    return "Im in!"
-
+    return render_template('menu.html',category=category,items=items)
 
 if __name__ == '__main__':
     app.debug = True
     app.run(host='0.0.0.0', port=5000,threaded=False)
-    
