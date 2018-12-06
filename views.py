@@ -26,6 +26,12 @@ def showItems(category_name):
     print category.id
     return render_template('menu.html',category=category,items=items)
 
+@app.route('/catalog/<string:category_name>/items/new',methods=['GET','POST'])
+def newCategoryItem(category_name):
+    category=session.query(Category).filter_by(name=category_name).one()
+    print category.name
+    return 'inside'
+
 if __name__ == '__main__':
     app.debug = True
     app.run(host='0.0.0.0', port=5000,threaded=False)
