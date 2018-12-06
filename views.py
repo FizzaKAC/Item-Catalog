@@ -44,7 +44,7 @@ def editCategoryItem(category_name,item_id):
     item=session.query(CategoryItem).filter_by(id=item_id).one()
     print item.name
     print item.category_id
-    return "Insiiide"
+    return render_template('editcategoryitem.html',item=item)
 
 
 if __name__ == '__main__':
