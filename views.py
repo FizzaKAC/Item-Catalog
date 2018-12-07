@@ -56,6 +56,11 @@ def editCategoryItem(category_name,item_id):
     else:
         return render_template('editcategoryitem.html',item=editedItem)
 
+@app.route('/catalog/<string:category_name>/items/<int:item_id>/delete',methods=['GET','POST'])
+def deleteCategoryItem(category_name,item_id):
+    itemToDelete=session.query(CategoryItem).filter_by(id=item_id).one()
+    return itemToDelete.name
+
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
     app.debug = True

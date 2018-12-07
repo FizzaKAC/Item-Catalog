@@ -51,7 +51,7 @@
 							<p>{{i.description}}</p>
 							<p class="menu-price">{{i.price}}</p>
 							<a href="{{url_for('editCategoryItem',category_name=category.name,item_id=i.id)}}">Edit</a> | 
-							<a href='#'>Delete</a>
+							<a href="{{url_for('deleteCategoryItem',category_name=category.name,item_id=i.id)}}">Delete</a>
 						</div>
 					{% endfor %}
 			</div>
