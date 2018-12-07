@@ -1,5 +1,5 @@
 from flask import Flask,render_template,request,flash,redirect,url_for
-from sqlalchemy import create_engine, asc
+from sqlalchemy import create_engine, asc,desc
 from sqlalchemy.orm import sessionmaker
 from models import Base, Category, CategoryItem
 app=Flask(__name__)
@@ -16,7 +16,8 @@ session = DBSession()
 @app.route('/catalog/')
 def index():
     categories=session.query(Category).order_by(asc(Category.name))
-    return render_template('categories.html',categories=categories)
+    recentItems=session.query(CategoryItem).order_by(desc(CategoryItem.created_date)).limit(10).all()
+    return render_template('categories.html',categories=categories,items=recentItems)
 
 @app.route('/catalog/<string:category_name>/')
 @app.route('/catalog/<string:category_name>/items/')
