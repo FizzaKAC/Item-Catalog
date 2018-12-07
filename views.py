@@ -54,7 +54,7 @@ def editCategoryItem(category_name,item_id):
         flash('Category Item Successfully Edited')
         return redirect(url_for('showItems', category_name=category_name))
     else:
-        return render_template('editcategoryitem.html',item=editedItem)
+        return render_template('editcategoryitem.html',item=editedItem,category_name=category_name)
 
 @app.route('/catalog/<string:category_name>/items/<int:item_id>/delete',methods=['GET','POST'])
 def deleteCategoryItem(category_name,item_id):
@@ -65,7 +65,7 @@ def deleteCategoryItem(category_name,item_id):
         flash('Meny Item Successfully Deleted')
         return redirect(url_for('showItems',category_name=category_name))
     else:
-        return render_template('deletecategoryitem.html',item=itemToDelete)
+        return render_template('deletecategoryitem.html',item=itemToDelete,category_name=category_name)
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
