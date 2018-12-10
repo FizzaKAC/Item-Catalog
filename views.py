@@ -17,7 +17,7 @@ session = DBSession()
 def index():
     categories=session.query(Category).order_by(asc(Category.name))
     recentItems=session.query(CategoryItem).order_by(desc(CategoryItem.created_date)).limit(10).all()
-    return render_template('categories.html',categories=categories,items=recentItems)
+    return render_template('index.html',categories=categories,items=recentItems)
 
 @app.route('/catalog/<string:category_name>/')
 @app.route('/catalog/<string:category_name>/items/')
