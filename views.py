@@ -28,6 +28,11 @@ def showItems(category_name):
     print category.id
     return render_template('categoryitem.html',category=category,items=items,categories=categories)
 
+@app.route('/catalog/<string:category_name>/<int:item_id>/')
+def getItem(category_name,item_id):
+    item=session.query(CategoryItem).filter_by(id=item_id).one()
+    return render_template('item.html',category_name=category_name,item=item)
+
 @app.route('/catalog/<string:category_name>/items/new/',methods=['GET','POST'])
 def newCategoryItem(category_name):
     category=session.query(Category).filter_by(name=category_name).one()

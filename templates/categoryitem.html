@@ -54,10 +54,7 @@
 				<div class="row ">
 					<div class="col-md-1"></div>
 					<div class="col-md-10 restaurant-list">
-						<h3>{{i.name}}</h3>
-						<p class="menu-price">{{i.price}}</p>
-						<a href="{{url_for('editCategoryItem',category_name=category.name,item_id=i.id)}}">Edit</a> | 
-						<a href="{{url_for('deleteCategoryItem',category_name=category.name,item_id=i.id)}}">Delete</a>
+						<a href="{{url_for('getItem',category_name=category.name,item_id=i.id)}}"><h3>{{i.name}}</h3></a>
 					</div>
 					<div class="col-md-1"></div>
 				</div>
