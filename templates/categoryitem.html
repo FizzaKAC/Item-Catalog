@@ -29,37 +29,40 @@
     {% endwith %}
 
 </div>
-	<div class="row padding-top padding-bottom ">
-		<div class="col-md-11 padding-none">
-			<a href="{{url_for('newCategoryItem',category_name=category.name)}}">
-				<button class="btn btn-default" id="new-menu-item">
-					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Add new item
-				</button>
-			</a>
-		</div>
-		<div class="col-md-7"></div>
-	</div>
-	<div class="col-md-5">
+<div>
+	<div class="col-md-6">
 		{% include 'categories.html' %}
 	</div>
-	<div class="col-md-5">		
-		{% if items !=[] %}	
-			<div class="row">
-				<div class="col-md-1"></div>
-				<div class="col-md-4">
-					<h2>Items</h2>
-						{% for i in items %}
-							<div class="menu-item">
-								<h3>{{i.name}}</h3>
-								<p>{{i.description}}</p>
-								<p class="menu-price">{{i.price}}</p>
-								<a href="{{url_for('editCategoryItem',category_name=category.name,item_id=i.id)}}">Edit</a> | 
-								<a href="{{url_for('deleteCategoryItem',category_name=category.name,item_id=i.id)}}">Delete</a>
-							</div>
-						{% endfor %}
-				</div>
-				<div class="col-md-1"></div>
+	<div class="col-md-6">
+		
+		<div class="row padding-top padding-bottom">
+			<div class="col-md-1"></div>
+			<div class="col-md-3">
+				<h2>Items</h2>
 			</div>
+			<div class="col-md-7">
+				<a href="{{url_for('newCategoryItem',category_name=category.name)}}">
+					<button class="btn btn-default" id="new-menu-item">
+						<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Add new item
+					</button>
+				</a>
+			</div>
+			<div class="col-md-1"></div>
+		</div>
+		{% if items !=[] %}	
+			{% for i in items %}
+				<div class="row ">
+					<div class="col-md-1"></div>
+					<div class="col-md-10 restaurant-list">
+						<h3>{{i.name}}</h3>
+						<p class="menu-price">{{i.price}}</p>
+						<a href="{{url_for('editCategoryItem',category_name=category.name,item_id=i.id)}}">Edit</a> | 
+						<a href="{{url_for('deleteCategoryItem',category_name=category.name,item_id=i.id)}}">Delete</a>
+					</div>
+					<div class="col-md-1"></div>
+				</div>
+			{% endfor %}
 		{% endif %}
 	</div>
+</div>
 {% endblock %}
