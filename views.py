@@ -67,9 +67,9 @@ def editCategoryItem(category_name,item_id):
 def deleteCategoryItem(category_name,item_id):
     itemToDelete=session.query(CategoryItem).filter_by(id=item_id).one()
     if request.method=='POST':
+        flash(itemToDelete.name+' successfully deleted')
         session.delete(itemToDelete)
         session.commit()
-        flash('Meny Item Successfully Deleted')
         return redirect(url_for('showItems',category_name=category_name))
     else:
         return render_template('deletecategoryitem.html',item=itemToDelete,category_name=category_name)
