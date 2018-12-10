@@ -23,9 +23,10 @@ def index():
 @app.route('/catalog/<string:category_name>/items/')
 def showItems(category_name):
     category=session.query(Category).filter_by(name=category_name).one()
+    categories=session.query(Category).order_by(asc(Category.name))
     items=session.query(CategoryItem).filter_by(category_id=category.id).all()
     print category.id
-    return render_template('categoryitem.html',category=category,items=items)
+    return render_template('categoryitem.html',category=category,items=items,categories=categories)
 
 @app.route('/catalog/<string:category_name>/items/new/',methods=['GET','POST'])
 def newCategoryItem(category_name):
