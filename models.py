@@ -11,13 +11,18 @@ class Category(Base):
 
     id=Column(Integer,primary_key=True)
     name=Column(String(80),nullable=False)
+    items=relationship('CategoryItem',backref='category',lazy=True)
 
     @property
     def serialize(self):
         """Return object data in easily serializeable format"""
+        list=[]
+        for item in self.items:
+           list.append(item.serialize)
         return {
             'id':self.id,
-            'name':self.name
+            'name':self.name,
+            'items':list
         }
 
 class CategoryItem(Base):
@@ -28,8 +33,8 @@ class CategoryItem(Base):
     description=Column(String(250))
     price=Column(String(8))
     created_date = Column(DateTime, default=datetime.datetime.utcnow)
-    category_id=Column(Integer,ForeignKey('category.id'))
-    category=relationship(Category)
+    category_id=Column(Integer,ForeignKey('category.id'),nullable=False)
+    #category=relationship(Category)
 
     @property
     def serialize(self):
@@ -39,6 +44,8 @@ class CategoryItem(Base):
              'name':self.name,
              'description':self.description,
              'price':self.price,
+             'created_date':self.created_date,
+             'category':self.category.name
          }
 
 

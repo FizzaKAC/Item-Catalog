@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request,flash,redirect,url_for
+from flask import Flask,render_template,request,flash,redirect,url_for,jsonify
 from sqlalchemy import create_engine, asc,desc
 from sqlalchemy.orm import sessionmaker
 from models import Base, Category, CategoryItem
@@ -11,6 +11,17 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
+@app.route('/catalog/<string:category_name>/<int:item_id>/JSON')
+def itemJSON(category_name,item_id):
+    item=session.query(CategoryItem).filter_by(id=item_id).one()
+    return jsonify(Category_Item=item.serialize)
+
+@app.route('/catalog/JSON')
+def catalogJSON():
+    categories=session.query(Category).all()
+    return jsonify(catalog=[c.serialize for c in categories]
+    )
 
 @app.route('/')
 @app.route('/catalog/')
