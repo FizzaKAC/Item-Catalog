@@ -33,11 +33,11 @@ def index():
 @app.route('/catalog/<string:category_name>/')
 @app.route('/catalog/<string:category_name>/items/')
 def showItems(category_name):
-    category=session.query(Category).filter_by(name=category_name).one()
+    #category=session.query(Category).filter_by(name=category_name).one()
     categories=session.query(Category).order_by(asc(Category.name))
-    items=session.query(CategoryItem).filter_by(category_id=category.id).all()
-    print category.id
-    return render_template('categoryitem.html',category=category,items=items,categories=categories)
+    items=session.query(CategoryItem).join(Category).filter(Category.name==category_name).all()
+    #print category.id
+    return render_template('categoryitem.html',category_name=category_name,items=items,categories=categories)
 
 @app.route('/catalog/<string:category_name>/<int:item_id>/')
 def getItem(category_name,item_id):
@@ -47,13 +47,13 @@ def getItem(category_name,item_id):
 @app.route('/catalog/<string:category_name>/items/new/',methods=['GET','POST'])
 def newCategoryItem(category_name):
     category=session.query(Category).filter_by(name=category_name).one()
-    print category.name
+    #print category.name
     if request.method == 'POST':
         newItem=CategoryItem(name=request.form['name'],description=request.form['description'],price=request.form['price'],category_id=category.id)
         session.add(newItem)
         session.commit()
         flash('New Menu %s Item Successfully Created' % (newItem.name))
-        return redirect(url_for('showItems', category_name=category.name))
+        return redirect(url_for('showItems', category_name=category_name))
     else:
         return render_template('newcategoryitem.html')
 
