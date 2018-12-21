@@ -207,15 +207,24 @@ def showItems(category_name):
     categories=session.query(Category).order_by(asc(Category.name))
     items=session.query(CategoryItem).join(Category).filter(Category.name==category_name).all()
     #print category.id
-    return render_template('categoryitem.html',category_name=category_name,items=items,categories=categories)
+    if 'username' not in login_session:
+        return render_template('publiccategoryitem.html',category_name=category_name,items=items,categories=categories)
+    else:
+        return render_template('categoryitem.html',category_name=category_name,items=items,categories=categories)
+    
 
 @app.route('/catalog/<string:category_name>/<int:item_id>/')
 def getItem(category_name,item_id):
     item=session.query(CategoryItem).filter_by(id=item_id).one()
-    return render_template('item.html',category_name=category_name,item=item)
+    if 'username' not in login_session:
+        return render_template('publicitem.html',category_name=category_name,item=item)
+    else:
+        return render_template('item.html',category_name=category_name,item=item)
 
 @app.route('/catalog/<string:category_name>/items/new/',methods=['GET','POST'])
 def newCategoryItem(category_name):
+    if 'username' not in login_session:
+        return redirect('/login')
     category=session.query(Category).filter_by(name=category_name).one()
     #print category.name
     if request.method == 'POST':
@@ -229,6 +238,8 @@ def newCategoryItem(category_name):
 
 @app.route('/catalog/<string:category_name>/items/<int:item_id>/edit/',methods=['GET','POST'])
 def editCategoryItem(category_name,item_id):
+    if 'username' not in login_session:
+        return redirect('/login')
     editedItem=session.query(CategoryItem).filter_by(id=item_id).one()
     if request.method == 'POST':
         if request.form['name']:
@@ -246,6 +257,8 @@ def editCategoryItem(category_name,item_id):
 
 @app.route('/catalog/<string:category_name>/items/<int:item_id>/delete',methods=['GET','POST'])
 def deleteCategoryItem(category_name,item_id):
+    if 'username' not in login_session:
+        return redirect('/login')
     itemToDelete=session.query(CategoryItem).filter_by(id=item_id).one()
     if request.method=='POST':
         flash(itemToDelete.name+' successfully deleted')
