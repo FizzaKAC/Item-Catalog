@@ -116,18 +116,58 @@ def login(provider):
         login_session['user_id'] = user.id
         
         #make token
-        token = user.generate_auth_token(600)
+        token = user.generate_auth_token()
 
         
         flash("You are now logged in as %s" % login_session['username'])
         #send back token to the client 
-        return jsonify({'token': token.decode('ascii')})
+        return redirect(url_for('index'))
         
         #return jsonify({'token': token.decode('ascii'), 'duration': 600})
     else:
         return 'Unrecoginized Provider'
 
 
+@app.route("/logout")
+def logout():
+    if 'provider' in login_session:
+        if login_session['provider'] == 'google':
+            gdisconnect()
+            del login_session['gplus_id']
+            del login_session['access_token']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        del login_session['user_id']
+        del login_session['provider']
+        flash("You have successfully been logged out.")
+        return redirect(url_for('index'))
+    else:
+        flash("You were not logged in")
+        return redirect(url_for('index'))
+
+def gdisconnect():
+    # Only disconnect a connected user.
+    access_token = login_session.get('access_token')
+    print access_token
+    if access_token is None:
+        response = make_response(
+            json.dumps('Current user not connected.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[0]
+    if result['status'] == '200':
+        response = make_response(json.dumps('Successfully disconnected.'), 200)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    else:
+        print result
+        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    
 def createUser(login_session):
     newUser = User(name=login_session['username'], email=login_session[
                    'email'], picture=login_session['picture'])
@@ -137,11 +177,11 @@ def createUser(login_session):
     return newUser
 
 def getUser(email):
+    try:
         user = session.query(User).filter_by(email=email).one()
-        if user is not None:
-            return user
-        else:
-            return None
+        return user
+    except:
+        return None
 @app.route('/catalog/<string:category_name>/<int:item_id>/JSON')
 def itemJSON(category_name,item_id):
     item=session.query(CategoryItem).filter_by(id=item_id).one()
