@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, session as login_session, make_response
-from sqlalchemy import create_engine, asc, des
+from sqlalchemy import create_engine, asc, desc
 from sqlalchemy.orm import sessionmaker
 from models import Base, Category, CategoryItem, User
 
