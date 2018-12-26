@@ -62,6 +62,8 @@ Download this application and add it to the shared vagrant folder. Run `python v
 
 Then copy the client id on the same page and replace it with the client id on the`login.html` file.
 
+Run `python views.py` and go and login with your google account once. You can then log out if you want. Exit the program. 
+
 Then run the *lotsOfCategories* and *lotsOfItems* files by running `python lotsOfCategories.py` and `python lotsOfItems.py`.
 
 Now rerun `python views.py`, go to the browser and type in `http://localhost:5000` and you are ready to go!
