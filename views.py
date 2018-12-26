@@ -27,6 +27,8 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 # Create anti-forgery state token
+
+
 @app.route('/login')
 def showLogin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
@@ -34,6 +36,7 @@ def showLogin():
     login_session['state'] = state
     # return "The current session state is %s" % login_session['state']
     return render_template('login.html', STATE=state)
+
 
 @app.route('/oauth/<provider>', methods=['POST'])
 def login(provider):
@@ -45,7 +48,8 @@ def login(provider):
     if provider == 'google':
         try:
             # Upgrade the authorization code into a credentials object
-            oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+            oauth_flow = flow_from_clientsecrets(
+                'client_secrets.json', scope='')
             oauth_flow.redirect_uri = 'postmessage'
             credentials = oauth_flow.step2_exchange(auth_code)
         except FlowExchangeError:
@@ -56,7 +60,8 @@ def login(provider):
 
         # Check that the access token is valid.
         access_token = credentials.access_token
-        url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s' % access_token)
+        url = (
+            'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s' % access_token)
         h = httplib2.Http()
         result = json.loads(h.request(url, 'GET')[1])
         # If there was an error in the access token info, abort.
@@ -84,7 +89,8 @@ def login(provider):
         stored_access_token = login_session.get('access_token')
         stored_gplus_id = login_session.get('gplus_id')
         if stored_access_token is not None and gplus_id == stored_gplus_id:
-            response = make_response(json.dumps('Current user is already connected.'), 200)
+            response = make_response(json.dumps(
+                'Current user is already connected.'), 200)
             response.headers['Content-Type'] = 'application/json'
             return response
 
@@ -103,19 +109,18 @@ def login(provider):
         login_session['picture'] = data['picture']
         login_session['email'] = data['email']
 
-
         login_session['provider'] = 'google'
         # see if user exists, if it doesn't make a new one
         user = getUser(data["email"])
         if not user:
             user = createUser(login_session)
         login_session['user_id'] = user.id
-        #make token
+        # make token
         token = user.generate_auth_token()
         flash("You are now logged in as %s" % login_session['username'])
-        #send back token to the client
+        # send back token to the client
         return redirect(url_for('index'))
-        #return jsonify({'token': token.decode('ascii'), 'duration': 600})
+        # return jsonify({'token': token.decode('ascii'), 'duration': 600})
     else:
         return 'Unrecoginized Provider'
 
@@ -138,6 +143,7 @@ def logout():
         flash("You were not logged in")
         return redirect(url_for('index'))
 
+
 def gdisconnect():
     # Only disconnect a connected user.
     access_token = login_session.get('access_token')
@@ -147,7 +153,7 @@ def gdisconnect():
             json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token  # noqa
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
     if result['status'] == '200':
@@ -156,16 +162,20 @@ def gdisconnect():
         return response
     else:
         print result
-        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response = make_response(json.dumps(
+            'Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
+
+
 def createUser(login_session):
     newUser = User(name=login_session['username'], email=login_session[
         'email'], picture=login_session['picture'])
     session.add(newUser)
     session.commit()
-    #user = session.query(User).filter_by(email=login_session['email']).one()
+    # user = session.query(User).filter_by(email=login_session['email']).one()
     return newUser
+
 
 def getUser(email):
     try:
@@ -173,39 +183,54 @@ def getUser(email):
         return user
     except:
         return None
+
+
 @app.route('/catalog/<string:category_name>/<int:item_id>/JSON')
 def itemJSON(category_name, item_id):
     item = session.query(CategoryItem).filter_by(id=item_id).one()
     return jsonify(Category_Item=item.serialize)
 
+
 @app.route('/catalog/users/JSON')
 def userJSON():
-    users=session.query(User).all()
+    users = session.query(User).all()
     return jsonify(users=[u.serialize for u in users])
+
 
 @app.route('/catalog/JSON')
 def catalogJSON():
     categories = session.query(Category).all()
     return jsonify(catalog=[c.serialize for c in categories])
 
+
 @app.route('/')
 @app.route('/catalog/')
 def index():
     categories = session.query(Category).order_by(asc(Category.name))
-    recentItems = session.query(CategoryItem).order_by(desc(CategoryItem.created_date)).limit(10).all()
+    recentItems = session.query(CategoryItem).order_by(
+        desc(CategoryItem.created_date)).limit(10).all()
     return render_template('index.html', categories=categories, items=recentItems)
+
 
 @app.route('/catalog/<string:category_name>/')
 @app.route('/catalog/<string:category_name>/items/')
 def showItems(category_name):
-    #category=session.query(Category).filter_by(name=category_name).one()
+    # category=session.query(Category).filter_by(name=category_name).one()
     categories = session.query(Category).order_by(asc(Category.name))
-    items = session.query(CategoryItem).join(Category).filter(Category.name == category_name).all()
-    #print category.id
+    items = session.query(CategoryItem).join(
+        Category).filter(Category.name == category_name).all()
+    # print category.id
     if 'username' not in login_session:
-        return render_template('publiccategoryitem.html', category_name=category_name, items=items, categories=categories)
+        return render_template('publiccategoryitem.html',
+                               category_name=category_name,
+                               items=items,
+                               categories=categories)
     else:
-        return render_template('categoryitem.html', category_name=category_name, items=items, categories=categories)
+        return render_template('categoryitem.html',
+                               category_name=category_name,
+                               items=items,
+                               categories=categories)
+
 
 @app.route('/catalog/<string:category_name>/<int:item_id>/')
 def getItem(category_name, item_id):
@@ -215,20 +240,26 @@ def getItem(category_name, item_id):
     else:
         return render_template('item.html', category_name=category_name, item=item)
 
+
 @app.route('/catalog/<string:category_name>/items/new/', methods=['GET', 'POST'])
 def newCategoryItem(category_name):
     if 'username' not in login_session:
         return redirect('/login')
     category = session.query(Category).filter_by(name=category_name).one()
-    #print category.name
+    # print category.name
     if request.method == 'POST':
-        newItem = CategoryItem(name=request.form['name'], description=request.form['description'], price=request.form['price'], category_id=category.id,user_id=login_session['user_id'])
+        newItem = CategoryItem(name=request.form['name'],
+                               description=request.form['description'],
+                               price=request.form['price'],
+                               category_id=category.id,
+                               user_id=login_session['user_id'])
         session.add(newItem)
         session.commit()
         flash('New Menu %s Item Successfully Created' % (newItem.name))
         return redirect(url_for('showItems', category_name=category_name))
     else:
         return render_template('newcategoryitem.html')
+
 
 @app.route('/catalog/<string:category_name>/items/<int:item_id>/edit/', methods=['GET', 'POST'])
 def editCategoryItem(category_name, item_id):
@@ -249,9 +280,13 @@ def editCategoryItem(category_name, item_id):
         session.add(editedItem)
         session.commit()
         flash('Category Item Successfully Edited')
-        return redirect(url_for('showItems', category_name=category_name))
+        return redirect(url_for('showItems',
+                                category_name=category_name))
     else:
-        return render_template('editcategoryitem.html', item=editedItem, category_name=category_name)
+        return render_template('editcategoryitem.html',
+                               item=editedItem,
+                               category_name=category_name)
+
 
 @app.route('/catalog/<string:category_name>/items/<int:item_id>/delete', methods=['GET', 'POST'])
 def deleteCategoryItem(category_name, item_id):
@@ -268,7 +303,10 @@ def deleteCategoryItem(category_name, item_id):
         session.commit()
         return redirect(url_for('showItems', category_name=category_name))
     else:
-        return render_template('deletecategoryitem.html', item=itemToDelete, category_name=category_name)
+        return render_template('deletecategoryitem.html',
+                               item=itemToDelete,
+                               category_name=category_name)
+
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
