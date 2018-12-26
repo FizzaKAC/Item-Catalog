@@ -178,6 +178,11 @@ def itemJSON(category_name, item_id):
     item = session.query(CategoryItem).filter_by(id=item_id).one()
     return jsonify(Category_Item=item.serialize)
 
+@app.route('/catalog/users/JSON')
+def userJSON():
+    users=session.query(User).all()
+    return jsonify(users=[u.serialize for u in users])
+
 @app.route('/catalog/JSON')
 def catalogJSON():
     categories = session.query(Category).all()
@@ -217,7 +222,7 @@ def newCategoryItem(category_name):
     category = session.query(Category).filter_by(name=category_name).one()
     #print category.name
     if request.method == 'POST':
-        newItem = CategoryItem(name=request.form['name'], description=request.form['description'], price=request.form['price'], category_id=category.id)
+        newItem = CategoryItem(name=request.form['name'], description=request.form['description'], price=request.form['price'], category_id=category.id,user_id=login_session['user_id'])
         session.add(newItem)
         session.commit()
         flash('New Menu %s Item Successfully Created' % (newItem.name))
@@ -230,6 +235,10 @@ def editCategoryItem(category_name, item_id):
     if 'username' not in login_session:
         return redirect('/login')
     editedItem = session.query(CategoryItem).filter_by(id=item_id).one()
+    if editedItem.user.email != login_session['email']:
+        return "<script>function myFunction() {alert('You are not authorized to edit this item.\
+ Please create your own item in order\
+ to edit.');}</script><body onload='myFunction()'>"
     if request.method == 'POST':
         if request.form['name']:
             editedItem.name = request.form['name']
@@ -249,6 +258,10 @@ def deleteCategoryItem(category_name, item_id):
     if 'username' not in login_session:
         return redirect('/login')
     itemToDelete = session.query(CategoryItem).filter_by(id=item_id).one()
+    if itemToDelete.user.email != login_session['email']:
+        return "<script>function myFunction() {alert('You are not authorized to delete this item.\
+ Please create your own item in order\
+ to delete.');}</script><body onload='myFunction()'>"
     if request.method == 'POST':
         flash(itemToDelete.name+' successfully deleted')
         session.delete(itemToDelete)
