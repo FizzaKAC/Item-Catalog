@@ -12,39 +12,42 @@ DBSession = sessionmaker(bind=engine)
 
 session = DBSession()
 
-item1 = CategoryItem(name="lamp1", description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis, felis at cursus auctor, nibh est pretium est, quis aliquet risus ligula ut quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum et est mauris. Etiam ultrices velit sed vehicula malesuada.", price=10, category_id=1)
+session.query(CategoryItem).delete()
+user=session.query(User).one()
+
+item1 = CategoryItem(name="lamp1", description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis, felis at cursus auctor, nibh est pretium est, quis aliquet risus ligula ut quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum et est mauris. Etiam ultrices velit sed vehicula malesuada.", price=10, category_id=1,user_id=user.id)
 session.add(item1)
 session.commit()
 
-item2 = CategoryItem(name="lamp2", description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis, felis at cursus auctor, nibh est pretium est, quis aliquet risus ligula ut quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum et est mauris. Etiam ultrices velit sed vehicula malesuada.", price=8, category_id=1)
+item2 = CategoryItem(name="lamp2", description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis, felis at cursus auctor, nibh est pretium est, quis aliquet risus ligula ut quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum et est mauris. Etiam ultrices velit sed vehicula malesuada.", price=8, category_id=1,user_id=user.id)
 session.add(item2)
 session.commit()
 
-item3 = CategoryItem(name="lamp3", description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis, felis at cursus auctor, nibh est pretium est, quis aliquet risus ligula ut quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum et est mauris. Etiam ultrices velit sed vehicula malesuada.", price=12, category_id=2)
+item3 = CategoryItem(name="lamp3", description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis, felis at cursus auctor, nibh est pretium est, quis aliquet risus ligula ut quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum et est mauris. Etiam ultrices velit sed vehicula malesuada.", price=12, category_id=2,user_id=user.id)
 session.add(item3)
 session.commit()
 
-item4 = CategoryItem(name="lamp4", description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis, felis at cursus auctor, nibh est pretium est, quis aliquet risus ligula ut quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum et est mauris. Etiam ultrices velit sed vehicula malesuada.", price=5, category_id=2)
+item4 = CategoryItem(name="lamp4", description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis, felis at cursus auctor, nibh est pretium est, quis aliquet risus ligula ut quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum et est mauris. Etiam ultrices velit sed vehicula malesuada.", price=5, category_id=2,user_id=user.id)
 session.add(item4)
 session.commit()
 
-item5 = CategoryItem(name="lamp5", description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis, felis at cursus auctor, nibh est pretium est, quis aliquet risus ligula ut quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum et est mauris. Etiam ultrices velit sed vehicula malesuada.", price=10, category_id=2)
+item5 = CategoryItem(name="lamp5", description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis, felis at cursus auctor, nibh est pretium est, quis aliquet risus ligula ut quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum et est mauris. Etiam ultrices velit sed vehicula malesuada.", price=10, category_id=2,user_id=user.id)
 session.add(item5)
 session.commit()
 
-item6 = CategoryItem(name="lamp6", description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis, felis at cursus auctor, nibh est pretium est, quis aliquet risus ligula ut quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum et est mauris. Etiam ultrices velit sed vehicula malesuada.", price=7, category_id=3)
+item6 = CategoryItem(name="lamp6", description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis, felis at cursus auctor, nibh est pretium est, quis aliquet risus ligula ut quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum et est mauris. Etiam ultrices velit sed vehicula malesuada.", price=7, category_id=3,user_id=user.id)
 session.add(item6)
 session.commit()
 
-item7 = CategoryItem(name="lamp7", description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis, felis at cursus auctor, nibh est pretium est, quis aliquet risus ligula ut quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum et est mauris. Etiam ultrices velit sed vehicula malesuada.", price=15, category_id=4)
+item7 = CategoryItem(name="lamp7", description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis, felis at cursus auctor, nibh est pretium est, quis aliquet risus ligula ut quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum et est mauris. Etiam ultrices velit sed vehicula malesuada.", price=15, category_id=4,user_id=user.id)
 session.add(item7)
 session.commit()
 
-item8 = CategoryItem(name="lamp8", description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis, felis at cursus auctor, nibh est pretium est, quis aliquet risus ligula ut quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum et est mauris. Etiam ultrices velit sed vehicula malesuada.", price=12, category_id=5)
+item8 = CategoryItem(name="lamp8", description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis, felis at cursus auctor, nibh est pretium est, quis aliquet risus ligula ut quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum et est mauris. Etiam ultrices velit sed vehicula malesuada.", price=12, category_id=5,user_id=user.id)
 session.add(item8)
 session.commit()
 
-item9 = CategoryItem(name="lamp9", description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis, felis at cursus auctor, nibh est pretium est, quis aliquet risus ligula ut quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum et est mauris. Etiam ultrices velit sed vehicula malesuada.", price=18, category_id=6)
+item9 = CategoryItem(name="lamp9", description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis, felis at cursus auctor, nibh est pretium est, quis aliquet risus ligula ut quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum et est mauris. Etiam ultrices velit sed vehicula malesuada.", price=18, category_id=6,user_id=user.id)
 session.add(item9)
 session.commit()
 print "Added Items!"  
