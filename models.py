@@ -17,7 +17,15 @@ class User(Base):
     name = Column(String(250), nullable=False)
     email = Column(String(250), nullable=False)
     picture = Column(String(250))
-
+    items=relationship('CategoryItem',backref='user',lazy=True)
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'id':self.id,
+            'name':self.name,
+            'email':self.email
+        }
     def generate_auth_token(self, expiration=600):
         s = Serializer(secret_key, expires_in = expiration)
         return s.dumps({'id': self.id })
@@ -63,6 +71,7 @@ class CategoryItem(Base):
     price=Column(String(8))
     created_date = Column(DateTime, default=datetime.datetime.utcnow)
     category_id=Column(Integer,ForeignKey('category.id'),nullable=False)
+    user_id = Column(Integer, ForeignKey('user.id'),nullable=False)
     #category=relationship(Category)
 
     @property
@@ -74,7 +83,9 @@ class CategoryItem(Base):
              'description':self.description,
              'price':self.price,
              'created_date':self.created_date,
-             'category':self.category.name
+             'category':self.category.name,
+             'user_id':self.user.id,
+             'username':self.user.name
          }
 
 
